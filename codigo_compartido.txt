@@ -1,0 +1,86 @@
+import customtkinter as ctk
+from PIL import Image, ImageTk
+
+# Configuración de apariencia
+ctk.set_appearance_mode("dark")
+
+# Ventana principal
+app = ctk.CTk()
+
+app.geometry("800x500")
+app.title("Mi aplicación")
+
+# Fondo rojo
+app.configure(fg_color="#b30000")
+
+
+# -------------------------------
+# Barra superior negra
+# -------------------------------
+
+barra_superior = ctk.CTkFrame(
+    app,
+    height=100,
+    fg_color="black",
+    corner_radius=0
+)
+
+barra_superior.pack(
+    fill="x",
+    side="top"
+)
+
+
+# Imagen
+imagen = Image.open("imagen.png")
+imagen = imagen.resize((70,70))
+
+imagen_tk = ImageTk.PhotoImage(imagen)
+
+label_imagen = ctk.CTkLabel(
+    barra_superior,
+    image=imagen_tk,
+    text=""
+)
+
+label_imagen.pack(
+    side="left",
+    padx=20,
+    pady=15
+)
+
+
+# Texto al lado de la imagen
+
+texto = ctk.CTkLabel(
+    barra_superior,
+    text="Buenos días",
+    font=("Arial", 28),
+    text_color="white"
+)
+
+texto.pack(
+    side="left",
+    padx=10
+)
+
+
+# -------------------------------
+# Parte inferior
+# -------------------------------
+
+pie = ctk.CTkLabel(
+    app,
+    text="Paga aquí XXXXXXXXX",
+    font=("Arial", 20),
+    text_color="white"
+)
+
+pie.pack(
+    side="bottom",
+    pady=20
+)
+
+
+# Ejecutar
+app.mainloop()
