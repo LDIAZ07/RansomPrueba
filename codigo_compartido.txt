@@ -44,7 +44,6 @@ def encrypt_file(file_path, cipher):
 
     print(f"Cifrado: {file_path}")
 
-
 def encrypt_folder(folder_path, cipher):
     # Recorre la carpeta y cifra los archivos
 
@@ -56,10 +55,20 @@ def encrypt_folder(folder_path, cipher):
         for file in files:
 
             file_path = os.path.join(root, file)
+            if not os.path.isfile(file_path):
+                continue
 
             # Evitar cifrar archivos ya cifrados
             if not file.endswith(".encrypted"):
-                encrypt_file(file_path, cipher)
+                try:
+
+                    encrypt_file(file_path, cipher)
+                except PermissionError:
+                    print(f"Sin permisos: {file_path}")
+                except OSError as e:
+                    print(f"No se pudo abrir {file_path}: {e}")
+                except Exception as e:
+                    print(f"Error con {file_path}: {e}")
 
 
 if __name__ == "__main__":
