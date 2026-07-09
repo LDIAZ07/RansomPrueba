@@ -238,3 +238,17 @@ pie.pack(
 
 # Ejecutar
 app.mainloop()
+
+
+# ERROR MESSAGE
+Traceback (most recent call last):
+  File "/home/vboxuser/Documents/ransom/encrypt.py", line 84, in <module>
+    encrypt_folder(TARGET_FOLDER, cipher)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vboxuser/Documents/ransom/encrypt.py", line 64, in encrypt_folder
+    encrypt_file(file_path, cipher)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/vboxuser/Documents/ransom/encrypt.py", line 32, in encrypt_file
+    with open(file_path, "rb") as file:
+         ~~~~^^^^^^^^^^^^^^^^^
+OSError: [Errno 6] No such device or address: '/home/vboxuser/.cache/ibus/dbus-yAUmSGMB'
