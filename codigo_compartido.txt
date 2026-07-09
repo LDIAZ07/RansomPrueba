@@ -1,86 +1,56 @@
-import customtkinter as ctk
-from PIL import Image, ImageTk
-
-# Configuración de apariencia
-ctk.set_appearance_mode("dark")
-
-# Ventana principal
-app = ctk.CTk()
-
-app.geometry("800x500")
-app.title("Mi aplicación")
-
-# Fondo rojo
-app.configure(fg_color="#b30000")
-
-
 # -------------------------------
-# Barra superior negra
+# Texto central
 # -------------------------------
 
-barra_superior = ctk.CTkFrame(
+texto_centro = ctk.CTkLabel(
     app,
-    height=100,
-    fg_color="black",
-    corner_radius=0
-)
-
-barra_superior.pack(
-    fill="x",
-    side="top"
-)
-
-
-# Imagen
-imagen = Image.open("imagen.png")
-imagen = imagen.resize((70,70))
-
-imagen_tk = ImageTk.PhotoImage(imagen)
-
-label_imagen = ctk.CTkLabel(
-    barra_superior,
-    image=imagen_tk,
-    text=""
-)
-
-label_imagen.pack(
-    side="left",
-    padx=20,
-    pady=15
-)
-
-
-# Texto al lado de la imagen
-
-texto = ctk.CTkLabel(
-    barra_superior,
-    text="Buenos días",
-    font=("Arial", 28),
+    text="Este es un contador",
+    font=("Arial", 30),
     text_color="white"
 )
 
-texto.pack(
-    side="left",
-    padx=10
-)
-
-
-# -------------------------------
-# Parte inferior
-# -------------------------------
-
-pie = ctk.CTkLabel(
-    app,
-    text="Paga aquí XXXXXXXXX",
-    font=("Arial", 20),
-    text_color="white"
-)
-
-pie.pack(
-    side="bottom",
+texto_centro.pack(
+    expand=True,
     pady=20
 )
 
 
-# Ejecutar
-app.mainloop()
+# -------------------------------
+# Contador de 24 horas
+# -------------------------------
+
+segundos_restantes = 24 * 60 * 60
+
+
+contador_label = ctk.CTkLabel(
+    app,
+    text="24:00:00",
+    font=("Arial", 50),
+    text_color="white"
+)
+
+contador_label.pack(
+    pady=20
+)
+
+
+def actualizar_contador():
+
+    global segundos_restantes
+
+    horas = segundos_restantes // 3600
+    minutos = (segundos_restantes % 3600) // 60
+    segundos = segundos_restantes % 60
+
+    tiempo = f"{horas:02}:{minutos:02}:{segundos:02}"
+
+    contador_label.configure(
+        text=tiempo
+    )
+
+    if segundos_restantes > 0:
+        segundos_restantes -= 1
+        app.after(1000, actualizar_contador)
+
+
+actualizar_contador()
