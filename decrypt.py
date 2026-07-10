@@ -27,13 +27,13 @@ folders = [
 
 
 def load_key():
-    """Carga la clave desde key.key"""
+    # Carga la clave desde key.key
     with open(KEY_FILE, "rb") as file:
         return file.read()
 
 
 def decrypt_file(file_path, cipher):
-    """Descifra un archivo individual"""
+    # Descifra un archivo individual
 
     # Leer contenido cifrado
     with open(file_path, "rb") as file:
